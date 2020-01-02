@@ -8,4 +8,7 @@ HelloWorldApp.class : HelloWorldApp.java Bicycle.class
 %.class : %.java
 	javac $<
 
+clean:
+	rm *.class
+
 #.class: Bicycle.java HelloWorldApp.java  
