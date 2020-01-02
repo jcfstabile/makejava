@@ -4,8 +4,8 @@ public class Bicycle {
     int speed = 0;
     int gear = 1;
 
-    Bicycle(int speed){
-        this.speed = speed;
+    Bicycle(int seed){
+        this.speed = seed;
     }
  
     void changeCadence(int newValue) {

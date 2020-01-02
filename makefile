@@ -1,5 +1,5 @@
 #.SUFFIXES: .java .class
-.PHONY: clean run 
+.PHONY: clean build run 
 
 main = HelloWorldApp.java
 sources =
@@ -10,6 +10,7 @@ build: $(main:.java=.class)
 
 %.class : %.java
 	javac $<
+	@echo $<
 
 clean:
 	rm *.class
