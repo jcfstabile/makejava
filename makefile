@@ -1,8 +1,10 @@
-.SUFFIXES: .java .class
+#.SUFFIXES: .java .class
 
-sources = Bicycle.java HelloWorldApp.java
+main = HelloWorldApp.java
+sources = Bicycle.java
+sources += Car.java
 
-HelloWorldApp.class : HelloWorldApp.java Bicycle.class
+HelloWorldApp.class : $(main) $(sources:.java=.class)
 	javac HelloWorldApp.java
 
 %.class : %.java
