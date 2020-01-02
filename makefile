@@ -1,7 +1,8 @@
 #.SUFFIXES: .java .class
 
 main = HelloWorldApp.java
-sources = Bicycle.java
+sources =
+sources += Bicycle.java
 sources += Car.java
 
 HelloWorldApp.class : $(main) $(sources:.java=.class)
@@ -12,5 +13,8 @@ HelloWorldApp.class : $(main) $(sources:.java=.class)
 
 clean:
 	rm *.class
+
+run: $(main:.java=.class)
+	java $(main:.java=)
 
 #.class: Bicycle.java HelloWorldApp.java  
