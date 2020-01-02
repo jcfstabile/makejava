@@ -8,9 +8,6 @@ sources += Car.java
 
 build: $(main:.java=.class)
 
-#$(main:.java=.class) : $(main) $(sources:.java=.class)
-#	javac $(main)
-
 %.class : %.java
 	javac $<
 
