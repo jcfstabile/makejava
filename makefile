@@ -6,11 +6,11 @@ sources =
 sources += Bicycle.java
 sources += Car.java
 
-build: $(main:.java=.class)
+build: $(sources:.java=.class) $(main:.java=.class)
+	@echo Build done
 
 %.class : %.java
 	javac $<
-	@echo $<
 
 clean:
 	rm *.class
