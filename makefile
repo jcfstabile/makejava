@@ -1,7 +1,7 @@
 #.SUFFIXES: .java .class
 .PHONY: clean build run 
 
-main = HelloWorldApp.java
+main = Vehicle.java
 sources =
 sources += Bicycle.java
 sources += Car.java
