@@ -19,7 +19,7 @@ clean:
 	rm *.class
 
 run: $(main:.java=.class)
-	@java $(main:.java=)
+	@java -cp $(classpath) $(main:.java=)
 
 test: build
 	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass)
