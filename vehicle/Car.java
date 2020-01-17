@@ -1,3 +1,5 @@
+package vehicle;
+
 public class Car{
    int wheel = 4; 
 

@@ -3,7 +3,8 @@
 
 #donde buscar los prerequisitos (separados por blanks o colons)
 # subdirs que coincidaran con los nombres de los *package*
-VPATH = 
+VPATH = vehicle:tests
+
 
 #java file (con el .java) donde este el main ,si no hay, dejar: main = 
 main = Vehicle.java

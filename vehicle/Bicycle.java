@@ -1,10 +1,12 @@
+package vehicle;
+
 public class Bicycle {
  
     int cadence = 0;
-    int speed = 0;
+    public int speed = 0;
     int gear = 1;
 
-    Bicycle(int seed){
+    public Bicycle(int seed){
         this.speed = seed;
     }
  

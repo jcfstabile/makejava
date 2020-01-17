@@ -1,3 +1,5 @@
+package vehicle;
+
 class Vehicle{
     public static void main(String[] args) {
         Bicycle bici = new Bicycle(1);
