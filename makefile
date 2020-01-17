@@ -27,8 +27,9 @@ build: $(sources:.java=.class)
 %.class : %.java
 	javac -cp $(classpath) $<
 
+# https://unix.stackexchange.com/a/116390/103956
 clean:
-	rm *.class
+	find . -type f -name '*.class' -exec rm -v {} +
 
 run: $(main:.java=.class)
 	@java -cp $(classpath) $(main:.java=)
