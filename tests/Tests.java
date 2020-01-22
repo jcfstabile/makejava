@@ -2,7 +2,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
-import vehicle.Bicycle;
+import bicycle.Bicycle;
 
 public class Tests{
     @Test

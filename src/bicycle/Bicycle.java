@@ -1,4 +1,4 @@
-package vehicle;
+package bicycle;
 
 public class Bicycle {
  
@@ -26,7 +26,7 @@ public class Bicycle {
          speed = speed - decrement;
     }
  
-    void printStates() {
+    public void printStates() {
          System.out.println("cadence:" +
              cadence + " speed:" + 
              speed + " gear:" + gear);
