@@ -1,11 +1,14 @@
 # makejava
 
-_makefile_ to build a little java prj (and al very little java project to test it)
+make script (_ __makejava.mk__ _) to generate a _makefile_ to build a little java prj (and a very little java project to test it) with work tree similar to eclipse's .
 
 ### Use
-#### On _makefile_
-- set the *main* class `.java` filename to de _main_ variable.
-- add (`+=`) all other class `.java` filenames to _source_ variable.
+#### Generate _makefile_ running:
 
-you are ready to build the project with:
-`$ make`
+- Run
+`$ ./makejava.mk auto`
+- Now use _make_ to: build, clear, run and test the project. ie
+`$ make build`
+  or
+`$ make test`
+
