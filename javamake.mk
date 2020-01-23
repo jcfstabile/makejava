@@ -1,14 +1,14 @@
 #!/usr/bin/make -f
 #
 # template start
-.PHONY: clean build run test
+.PHONY: build clean run test
 # bin existe
-classpath = .:bin:/usr/share/java/junit4.jar
+classpath = .:bin:src:/usr/share/java/junit4.jar
 
 build: $(sources:.java=.class)
 	@echo build done
 
-%.class : %.java
+%.class: %.java
 	javac -d bin -cp $(classpath) $<
 
 clean:
