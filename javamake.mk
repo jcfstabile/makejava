@@ -27,6 +27,6 @@ auto:
 	@echo VPATH = $(shell find -name '*.java' | sed 's%^\./\(.*\)/.*$$%\1%g' | uniq | paste -sd':' ) >> makefile
 	@echo main = $(shell grep -H -r 'main.*String' */*.java | sed 's#^.*/\(.*java\):.*$$#\1#g' ) >> makefile
 	@echo sources = \$$\(main\) $(shell find -name '*.java' | sed 's#^.*/\(.*\)$$#\1#g' | paste -sd' ') >> makefile
-	@echo testclass = $(shell grep -H -r "import[[:space:]]*static[[:space:]]*org.junit" tests/*.java | sed 's#^tests/\(.*\)\.java:.*$$#\1#g') >> makefile
+	@echo testclass = $(shell grep -H -r "import[[:space:]]*org.junit.Test;" tests/*.java | sed 's#^tests/\(.*\)\.java:.*$$#\1#g') >> makefile
 	@cat javamake.mk >> makefile
 	@make
