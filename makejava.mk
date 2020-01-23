@@ -28,5 +28,5 @@ auto:
 	@echo main = $(shell grep -H -r 'main.*String' */*.java | sed 's#^.*/\(.*java\):.*$$#\1#g' ) >> makefile
 	@echo sources = \$$\(main\) $(shell find -name '*.java' | sed 's#^.*/\(.*\)$$#\1#g' | paste -sd' ') >> makefile
 	@echo testclass = $(shell grep -H -r "import[[:space:]]*org.junit.Test;" tests/*.java | sed 's#^tests/\(.*\)\.java:.*$$#\1#g') >> makefile
-	@cat javamake.mk >> makefile
+	@cat makejava.mk >> makefile
 	@make
