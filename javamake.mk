@@ -4,6 +4,7 @@
 .PHONY: build clean run test
 # bin existe
 classpath = .:bin:src:/usr/share/java/junit4.jar
+vpath %.class $(subst src,bin,$(VPATH)):bin
 
 build: $(sources:.java=.class)
 	@echo build done
