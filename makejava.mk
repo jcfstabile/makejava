@@ -19,7 +19,7 @@ run: $(main:.java=.class)
 	@java -cp $(classpath) $(main:.java=)
 
 test: build
-	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass)
+	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
 
 ### genera un makefile configurado automaticamente
 auto:
