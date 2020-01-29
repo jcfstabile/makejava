@@ -5,8 +5,14 @@
 # bin existe
 classpath = .:bin:src:/usr/share/java/junit4.jar
 vpath %.class $(subst src,bin,$(VPATH)):bin
+current := $(main) $(shell find src tests  -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
 build: $(sources:.java=.class)
+ifeq ($(sources), $(current))
+	@echo Updated
+else
+	@echo Need update
+endif
 	@echo build done
 
 %.class: %.java
