@@ -2,8 +2,9 @@
 #
 # template start
 .PHONY: build clean run test
+	# https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 # bin existe
-classpath = .:bin:src:/usr/share/java/junit4.jar
+classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 current := $(main) $(shell find src tests  -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
@@ -25,8 +26,8 @@ run: $(main:.java=.class)
 	@java -cp $(classpath) $(main:.java=)
 
 test: build
-	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
-
+#	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
+	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^ */d'
 ### genera un makefile configurado automaticamente
 auto:
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile

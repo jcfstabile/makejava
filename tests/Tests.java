@@ -1,9 +1,7 @@
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestName;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import bicycle.Bicycle;
 
@@ -27,12 +25,12 @@ public class Tests{
         }
     }
 
-    @Rule
-    public TestName name = new TestName();
+//    @Rule
+//    public TestName name = new TestName();
 
-    @Before
+    @BeforeEach
     public void printName(){
-        System.out.println(name.getMethodName());
+       // System.out.println(name.getMethodName());
     }
 
     @Test
@@ -51,7 +49,7 @@ public class Tests{
     @Test
     public void bicycle_with_10_speed(){
         Bicycle byc = new Bicycle(10);
-        assertEquals("bicycle had a speed of 10", byc.speed, 10);
+        assertEquals( byc.speed, 10);
     }
 
     @Test
