@@ -17,8 +17,8 @@ endif
 	@echo build done
 
 lib/junit-platform-console-standalone-1.6.0.jar :
-	mkdir lib
-	wget -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
+	@mkdir lib
+	@wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 
 %.class: %.java
 	javac -d bin -cp $(classpath) $<
