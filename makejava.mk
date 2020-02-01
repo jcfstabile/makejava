@@ -8,13 +8,17 @@ classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 current := $(main) $(shell find src tests  -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
-build: $(sources:.java=.class)
+build: $(sources:.java=.class) lib/junit-platform-console-standalone-1.6.0.jar
 ifeq ($(sources), $(current))
 	@echo Updated
 else
 	@echo Need update
 endif
 	@echo build done
+
+lib/junit-platform-console-standalone-1.6.0.jar :
+	@mkdir lib
+	@wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 
 %.class: %.java
 	javac -d bin -cp $(classpath) $<
