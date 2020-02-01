@@ -31,7 +31,7 @@ run: $(main:.java=.class)
 
 test: build
 #	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
-	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^ .*/d'
+	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
 ### genera un makefile configurado automaticamente
 auto:
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
