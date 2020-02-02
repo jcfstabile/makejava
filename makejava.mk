@@ -4,13 +4,13 @@
 .PHONY: build clean run test
 # https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 VPATH = $(shell find -name '*.java' | sed 's%^\./\(.*\)/.*$$%\1%g' | uniq | paste -sd':' )
-main = $(shell grep -H -r 'main.*String' */*.java | sed 's%^.*/\(.*java\):.*$$%\1%g' )
+main = $(shell find -name '*.java' -exec grep 'void *main.*String' {} \+  | sed 's%^.*/\(.*java\):.*$$%\1%g' )
 sources = $(main) $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
-testclass = $(shell grep -H -r "import[[:space:]]*org.junit.Test;" tests/*.java | sed 's%^tests/\(.*\)\.java:.*$$%\1%g')
+testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | sed 's%^.*/\(.*\)\.java:.*$$%\1%g'| uniq )
 # bin existe
 classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
-current := $(main) $(shell find src tests  -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
+current := $(main) $(shell find -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
 build: lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
 ifeq ($(sources), $(current))
