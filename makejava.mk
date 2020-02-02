@@ -12,9 +12,6 @@ classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 current := $(main) $(shell find src tests  -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
-#prueba :
-#	@echo VPATH $(VPATH)
-
 build: lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
 ifeq ($(sources), $(current))
 	@echo Updated
@@ -39,6 +36,15 @@ run: $(main:.java=.class)
 test: build
 #	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
 	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
+
+prueba :
+	@echo "\e[91mVPATH\e[0m" $(VPATH)
+	@echo "\e[91mmain\e[0m" $(main)
+	@echo "\e[91msources\e[0m" $(sources)
+	@echo "\e[91mtestclass\e[0m" $(testclass)
+	@echo "\e[91mclasspath\e[0m" $(classpath)
+	@echo "\e[91mcurrent\e[0m" $(current)
+
 ### genera un makefile configurado automaticamente
 configure :
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
