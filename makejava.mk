@@ -4,20 +4,15 @@
 .PHONY: build clean run test
 # https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 VPATH = $(shell find -name '*.java' | sed 's%^\./\(.*\)/.*$$%\1%g' | uniq | paste -sd':' )
-main = $(shell find -name '*.java' -exec grep 'void *main.*String' {} \+  | sed 's%^.*/\(.*java\):.*$$%\1%g' )
-sources = $(main) $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
+mainfqn = $(shell find -name '*.java' -exec grep 'void *main.*String' {} \+  | sed 's%^.*/\(.*\)/\(.*\)\.java:.*$$%\1.\2%g' )
+mainclass = $(shell echo $(mainfqn) | sed 's%^.*\.\(.*\)$$%\1%g')
+sources = $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | sed 's%^.*/\(.*\)\.java:.*$$%\1%g'| uniq )
 # bin existe
 classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
-current := $(main) $(shell find -name '*java' |sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 
 build: lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-ifeq ($(sources), $(current))
-	@echo Updated
-else
-	@echo Need update
-endif
 	@echo build done
 
 lib/junit-platform-console-standalone-1.6.0.jar :
@@ -30,8 +25,12 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 clean:
 	find bin -name '*.class' -exec rm -v {} \+
 
-run: $(main:.java=.class)
-	@java -cp $(classpath) $(main:.java=)
+run: $(mainclass:=.class)
+ifneq ($(strip $(mainclass)),)
+	@java -cp $(classpath) $(mainfqn)
+else
+	@echo "\e[93mNo main method found\e[0m" 
+endif
 
 test: build
 #	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
@@ -39,11 +38,11 @@ test: build
 
 prueba :
 	@echo "\e[91mVPATH\e[0m" $(VPATH)
-	@echo "\e[91mmain\e[0m" $(main)
+	@echo "\e[91mmainfqn\e[0m" $(mainfqn)
+	@echo "\e[91mmainclass\e[0m" $(mainclass)
 	@echo "\e[91msources\e[0m" $(sources)
 	@echo "\e[91mtestclass\e[0m" $(testclass)
 	@echo "\e[91mclasspath\e[0m" $(classpath)
-	@echo "\e[91mcurrent\e[0m" $(current)
 
 ### genera un makefile configurado automaticamente
 configure :
