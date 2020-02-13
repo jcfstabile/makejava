@@ -12,8 +12,11 @@ testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | s
 classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 
-build: lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
+build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
 	@echo build done
+
+bin/ :
+	mkdir bin
 
 lib/junit-platform-console-standalone-1.6.0.jar :
 	@mkdir lib
@@ -25,7 +28,7 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 clean:
 	find bin -name '*.class' -exec rm -v {} \+
 
-run: $(mainclass:=.class)
+run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
 	@java -cp $(classpath) $(mainfqn)
 else
