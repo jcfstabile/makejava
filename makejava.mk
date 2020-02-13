@@ -50,5 +50,6 @@ prueba :
 ### genera un makefile configurado automaticamente
 configure :
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
-	@cat makejava.mk >> makefile
+	# $(MAKEFILE_LIST) is absolute path to this makefile
+	@cat $(MAKEFILE_LIST) >> makefile
 	@make
