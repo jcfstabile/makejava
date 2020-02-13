@@ -13,13 +13,13 @@ classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 
 build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-	@echo build done
+	@echo "\e[92mBuild done\e[0m"
 
 bin/ :
 	mkdir bin
 
 lib/junit-platform-console-standalone-1.6.0.jar :
-	@mkdir lib
+	@mkdir -p lib
 	@wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 
 %.class: %.java
