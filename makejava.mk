@@ -13,12 +13,13 @@ classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 
 build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-	@echo "\e[92mBuild done\e[0m"
+	@echo "\e[92mBuild done.\e[0m"
 
 bin/ :
-	mkdir bin
+	mkdir -p bin
 
 lib/junit-platform-console-standalone-1.6.0.jar :
+	@echo "\e[92mDownloading junit 5 platform console:\e[0m" 
 	@mkdir -p lib
 	@wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 
@@ -26,20 +27,22 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 	javac -d bin -cp $(classpath) $<
 
 clean:
+	@echo "\e[92mCleaning bin dir:\e[0m" 
 	find bin -name '*.class' -exec rm -v {} \+
 
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
+	@echo "\e[92mRunning main method found:\e[0m" 
 	@java -cp $(classpath) $(mainfqn)
 else
-	@echo "\e[93mNo main method found\e[0m" 
+	@echo "\e[93mNo main method found.\e[0m" 
 endif
 
 test: build
-#	@java -cp $(classpath) org.junit.runner.JUnitCore $(testclass) | sed '/^[[:space:]].*/d' 
+	@echo "\e[92mRunning tests:\e[0m" 
 	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
 
-prueba :
+check :
 	@echo "\e[91mVPATH\e[0m" $(VPATH)
 	@echo "\e[91mmainfqn\e[0m" $(mainfqn)
 	@echo "\e[91mmainclass\e[0m" $(mainclass)
@@ -52,4 +55,4 @@ configure :
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
 	# $(MAKEFILE_LIST) is absolute path to this makefile
 	@cat $(MAKEFILE_LIST) >> makefile
-	@make
+	#@make
