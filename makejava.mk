@@ -11,15 +11,16 @@ testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | s
 # bin existe
 classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
+e = \033
 
 build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-	@echo "\e[92mBuild done.\e[0m"
+	@echo "$e[92mBuild done.$e[0m"
 
 bin/ :
 	mkdir -p bin
 
 lib/junit-platform-console-standalone-1.6.0.jar :
-	@echo "\e[92mDownloading junit 5 platform console:\e[0m" 
+	@echo "$e[92mDownloading junit 5 platform console:$e[0m" 
 	@mkdir -p lib
 	@wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 
@@ -27,28 +28,28 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 	javac -d bin -cp $(classpath) $<
 
 clean:
-	@echo "\e[92mCleaning bin dir:\e[0m" 
+	@echo "$e[92mCleaning bin dir:$e[0m" 
 	find bin -name '*.class' -exec rm -v {} \+
 
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
-	@echo "\e[92mRunning main method found:\e[0m" 
+	@echo "$e[92mRunning main method found:$e[0m" 
 	@java -cp $(classpath) $(mainfqn)
 else
-	@echo "\e[93mNo main method found.\e[0m" 
+	@echo "$e[93mNo main method found.$e[0m" 
 endif
 
 test: build
-	@echo "\e[92mRunning tests:\e[0m" 
+	@echo "$e[92mRunning tests:$e[0m" 
 	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
 
 check :
-	@echo "\e[91mVPATH\e[0m" $(VPATH)
-	@echo "\e[91mmainfqn\e[0m" $(mainfqn)
-	@echo "\e[91mmainclass\e[0m" $(mainclass)
-	@echo "\e[91msources\e[0m" $(sources)
-	@echo "\e[91mtestclass\e[0m" $(testclass)
-	@echo "\e[91mclasspath\e[0m" $(classpath)
+	@echo "$e[91mVPATH$e[0m" $(VPATH)
+	@echo "$e[91mmainfqn$e[0m" $(mainfqn)
+	@echo "$e[91mmainclass$e[0m" $(mainclass)
+	@echo "$e[91msources$e[0m" $(sources)
+	@echo "$e[91mtestclass$e[0m" $(testclass)
+	@echo "$e[91mclasspath$e[0m" $(classpath)
 
 
 ### genera un makefile configurado automaticamente
@@ -62,10 +63,10 @@ configure :
 tips : tipsbanner imports
 
 tipsbanner : 
-	@echo -n "\e[94m"
+	@echo -n "$e[94m"
 	@echo Basics imports needed to include in test classes
-	@echo "ie. insert easily with: \e[95m make imports >> src/ClassTests.java"
-	@echo -n "\e[0m"
+	@echo "ie. insert easily with: $e[95m make imports >> src/ClassTests.java"
+	@echo -n "$e[0m"
 
 imports :
 	@echo import static org.junit.jupiter.api.Assertions.assertArrayEquals\;
