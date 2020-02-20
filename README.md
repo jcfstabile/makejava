@@ -1,14 +1,13 @@
 # makejava (valetudo)
-Include a _makefile_ and a very little java project to test it. *makejava* search for a _src_ directory for java files and project dirs and auto configure internals of the _makefile_ (handled with a shebang to make utility) that permit to build the project classes, run the project and test it (JUnit5 Jupiter) 
+Include a _makefile_ and a very little java project to test it. *makejava.mk* (and generated *makefile*) search for a _src_ directory for java files and *"java project dirs"*, auto configure internals of the _makefile_ ,if needed, (handled with a shebang to make utility) that permit to build the project classes, run the project and test it (JUnit5 Jupiter).
 
 #### makejava.mk  
-A _makefile_ that build a little java project with work tree similar to eclipse's (_bin_, _src_, _tests_).
+A makefile that generate a _makefile_ in the current directory, to build a little java project with a work tree similar to eclipse's (_bin_, _src_, _tests_). Handle packages as needed. Also, using _tips_ or _imports_ rules (last one to redirect the output), print *imports* headers needed on test classes files to use junit jupiter platform. If nedded, download and install _junit jupiter platform jar_ in local project tree.  
 
 ### Usage:
-#### Configure session and generate _makefile_:
+#### Generate _makefile_ by configuring it in current directoy:
 
-- Run   
-`$ ./makejava.mk config`
+`$ make -f /path/to/makejava/makejava.mk configure`
 
 #### Build and test the project using the generated _makefile_:
 
@@ -16,9 +15,9 @@ A _makefile_ that build a little java project with work tree similar to eclipse'
 `$ make build`  
   or  
 `$ make test`  
+  or
+`$ make run`  
 
-#### Regenerate _makefile_ if you add/remove a java class file:
+#### See tips to easily code junit jupiter platform test classes.
 
-- When you added _java_ files to your project, to generate a new _makefile_, just use auto:  
-`$ make configure` 
-- So on, keep working your project with _build_ (default),  _test_ or _run_.
+`$ make tips`
