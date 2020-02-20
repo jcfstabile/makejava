@@ -50,9 +50,26 @@ check :
 	@echo "\e[91mtestclass\e[0m" $(testclass)
 	@echo "\e[91mclasspath\e[0m" $(classpath)
 
+
 ### genera un makefile configurado automaticamente
 configure :
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
-	# $(MAKEFILE_LIST) is absolute path to this makefile
+	#$(MAKEFILE_LIST) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
-	#@make
+	# makefile written on $(shell pwd)
+	# use: make ; make run ; make test
+
+tips : tipsbanner imports
+
+tipsbanner : 
+	@echo -n "\e[94m"
+	@echo Basics imports needed to include in test classes
+	@echo "ie. insert easily with: \e[95m make imports >> src/ClassTests.java"
+	@echo -n "\e[0m"
+
+imports :
+	@echo import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+	@echo import static org.junit.jupiter.api.Assertions.assertEquals;
+	@echo import org.junit.jupiter.api.Test;
+	@echo import org.junit.jupiter.api.BeforeEach;
+
