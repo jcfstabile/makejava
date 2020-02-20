@@ -68,8 +68,8 @@ tipsbanner :
 	@echo -n "\e[0m"
 
 imports :
-	@echo import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-	@echo import static org.junit.jupiter.api.Assertions.assertEquals;
-	@echo import org.junit.jupiter.api.Test;
-	@echo import org.junit.jupiter.api.BeforeEach;
+	@echo import static org.junit.jupiter.api.Assertions.assertArrayEquals\;
+	@echo import static org.junit.jupiter.api.Assertions.assertEquals\;
+	@echo import org.junit.jupiter.api.Test\;
+	@echo import org.junit.jupiter.api.BeforeEach\;
 
