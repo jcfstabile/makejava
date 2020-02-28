@@ -55,7 +55,7 @@ check :
 ### genera un makefile configurado automaticamente
 configure :
 	@echo "# makefile autoconfigurado on $(CURDIR)" > makefile
-	#$(MAKEFILE_LIST) is absolute path
+	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
 	# makefile written on $(shell pwd)
 	# use: make ; make run ; make test
