@@ -1,24 +1,31 @@
-# makejava
-Include a script to generate a _makefile_ and a very little java project to test it. *makejava* search for a _src_ directory for java files and project dirs and generate a _makefile_ (later handled with make utility) that permit to build the project classes, run the project and test it (JUnit4) 
+# makejava (valetudo)
+Include a _makefile_ and a very little java project to test it. *makejava.mk* (and generated *makefile*) search for a _src_ directory for java files and *"java project dirs"*, auto configure internals of the _makefile_, if needed, (handled with a shebang to make utility) that permit to build the project classes, run the project and test it (JUnit5 Jupiter).
 
-#### makejava.mk  
-make script to generate a _makefile_ that build a little java project with work tree similar to eclipse's .
+#### makejava.mk
+A makefile that generate a _makefile_ in the current directory, to build a little java project with a work tree similar to eclipse's (_bin_, _src_, _tests_). Handle packages as needed. Also, using _tips_ or _imports_ rules (last one to redirect the output), print *imports* headers needed on test classes files to use junit jupiter platform. If nedded, download and install _junit jupiter platform standalone jar_ in local project tree.  
 
-### Usage:
-#### Generate _makefile_:
+### Usage.
+#### Generate _makefile_ by configuring it in current directoy.
 
-- Run   
-`$ ./makejava.mk auto`
+`$ make -f /path/to/makejava/makejava.mk configure`
 
-#### Build and test the project using the generated _makefile_:
+#### Build and test the project using the generated _makefile_.
 
-- Now use _make_ to: build, clear, run and test the project. ie  
+Now use _make_ to: build, clear, run and test the project.
+
 `$ make build`  
   or  
 `$ make test`  
+  or  
+`$ make run`  
 
-#### Regenerate _makefile_ if you add/remove a java class file:
+#### See tips to easily code junit jupiter platform test classes.
 
-- When you added _java_ files to your project, to generate a new _makefile_, just use auto:  
-`$ make auto` 
-- So on, keep working your project with _build_ (default),  _test_ or _run_.
+`$ make tips`
+
+#### Dependencies.
+
+_makejava valetuto_ depends on make and jdk (8). You can install thoses packages if needed, i.e.:
+
+`# apt install make`  
+`# apt install openjdk-8*`
