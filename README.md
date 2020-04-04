@@ -25,7 +25,7 @@ Now use _make_ to: build, clear, run and test the project.
 
 #### Dependencies.
 
-_makejava valetuto_ depends on make and jdk (8). You can install thoses packages if needed, i.e.:
+_makejava valetuto_ depends on make and jdk (ie 8/14). You can install thoses packages if needed, i.e.:
 
 `# apt install make`  
-`# apt install openjdk-8*`
+`# apt install openjdk-8*` or `# apt install openjdk-14*`

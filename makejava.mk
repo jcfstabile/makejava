@@ -16,7 +16,7 @@ greenbg = "\${e}[42m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
-makelink = ln -s $(dir $(MAKEFILE_LIST))/lib lib;
+makelink = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 
 usage : 
 	@echo -e Type "${greenbg}" make describe "${reset}" for info or
@@ -38,13 +38,17 @@ describe :
 	@echo -e "make build ; make run ; make test"
 	@echo -e 
 
-build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
+#build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
+build: bin/ lib/ $(sources:.java=.class) 
 	@echo -e "${e}[92mBuild done.${e}[0m"
 
 bin/ :
 	mkdir -p bin
 
+lib/ : lib/junit-platform-console-standalone-1.6.0.jar
+
 lib/junit-platform-console-standalone-1.6.0.jar :
+	echo $(dir $(MAKEFILE_LIST))
 	@if [ -x "makejava.mk" ]; then $(download) else $(makelink) fi
 
 %.class: %.java
@@ -76,7 +80,7 @@ checkvars :
 
 
 ### genera un makefile configurado automaticamente
-configure :
+configure : lib/
 	@echo -e "# makefile autoconfigurado on $(CURDIR)" > makefile
 	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
