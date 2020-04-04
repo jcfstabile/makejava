@@ -46,6 +46,7 @@ bin/ :
 	mkdir -p bin
 
 lib/ : lib/junit-platform-console-standalone-1.6.0.jar
+	@:
 
 lib/junit-platform-console-standalone-1.6.0.jar :
 	echo $(dir $(MAKEFILE_LIST))
