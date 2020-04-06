@@ -1,9 +1,13 @@
 package car;
 
 public class Car{
-   int wheel = 4; 
+   int wheels = 4; 
 
    public void printStates() {
-       System.out.println("Wheels: " + wheel);
+       System.out.println("Wheels: " + wheels);
+   }
+
+   public int getWheels(){
+       return this.wheels;
    }
 }

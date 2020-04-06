@@ -13,6 +13,7 @@ classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 e = \033
 greenbg = "\${e}[42m"
+graybg = "\${e}[40m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
@@ -49,8 +50,8 @@ lib/ : lib/junit-platform-console-standalone-1.6.0.jar
 	@:
 
 lib/junit-platform-console-standalone-1.6.0.jar :
-	echo $(dir $(MAKEFILE_LIST))
 	@if [ -x "makejava.mk" ]; then $(download) else $(makelink) fi
+	@if [ -d lib ]; then printf "lib done\n"; fi
 
 %.class: %.java
 	javac -d bin -cp $(classpath) $<
@@ -67,7 +68,7 @@ else
 	@echo -e "${e}[93mNo main method found.${e}[0m" 
 endif
 
-test: build
+test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
 	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
 
@@ -82,11 +83,11 @@ checkvars :
 
 ### genera un makefile configurado automaticamente
 configure : lib/
-	@echo -e "# makefile autoconfigurado on $(CURDIR)" > makefile
+	@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
 	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
-	@echo -e "${e}[40m" makefile written on $(shell pwd) "${e}[0m"
-	@echo -e "# use: make build ; make run ; make test"
+	@printf "${graybg} makefile written on $(shell pwd) ${reset}\n"
+	@printf "# use: make build ; make run ; make test\n"
 
 tips : tipsbanner imports
 
