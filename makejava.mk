@@ -4,7 +4,8 @@
 .PHONY: build clean run test
 # https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 VPATH = $(shell find -name '*.java' | sed 's%^\./\(.*\)/.*$$%\1%g' | uniq | paste -sd':' )
-mainfqn = $(shell find -name '*.java' -exec grep 'void *main.*Str' {} \+ | sed 's%^.*/src\(.*\)/\(.*\)\.java:.*$$%\1.\2%' | sed 's%^[/.]%%g'  | sed 's%/%.%g' )
+# the following line has a bug... or the use of its output do. the === in main is for disable this behave
+mainfqn = $(shell find -name '*.java' -exec grep 'void *ma===in.*Str' {} \+ | sed 's%^.*/src\(.*\)/\(.*\)\.java:.*$$%\1.\2%' | sed 's%^[/.]%%g'  | sed 's%/%.%g' )
 mainclass = $(shell echo $(mainfqn) | sed 's%^.*\.\(.*\)$$%\1%g')
 sources = $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | sed 's%^.*/\(.*\)\.java:.*$$%\1%g'| uniq )
@@ -70,7 +71,7 @@ endif
 
 test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
-	java -jar lib/* -cp $(classpath) --scan-class-path | sed '/^[[ ] .*/d'
+	java -jar lib/* -cp $(classpath) --scan-class-path --include-engine junit-jupiter --exclude-engine junit-vintage | sed '/^[[ ] .*/d'
 
 checkvars :
 	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
