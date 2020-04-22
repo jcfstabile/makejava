@@ -55,6 +55,7 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 	@if [ -d lib ]; then printf "lib done\n"; fi
 
 %.class: %.java
+	@echo -e "${e}[92mCompiling :${e}[0m" 
 	javac -d bin -cp $(classpath) $<
 
 clean:
@@ -71,7 +72,8 @@ endif
 
 test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
-	java -jar lib/* -cp $(classpath) --scan-class-path --include-engine junit-jupiter --exclude-engine junit-vintage | sed '/^[[ ] .*/d'
+	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; fi
+	java -jar lib/* @TestClasses -cp $(classpath) --include-engine junit-jupiter --exclude-engine junit-vintage | sed '/^[[ ] .*/d'
 
 checkvars :
 	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
