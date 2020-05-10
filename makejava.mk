@@ -13,6 +13,7 @@ testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | s
 classpath = .:bin:src:lib/*
 vpath %.class $(subst src,bin,$(VPATH)):bin
 e = \033
+inverse = "\${e}[7m"
 greenbg = "\${e}[42m"
 graybg = "\${e}[40m"
 greenfg = "\${e}[92m"
@@ -22,9 +23,10 @@ download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir
 makelink = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 
 usage : 
-	@echo -e Type "${greenbg}" make describe "${reset}" for info or
-	@echo -e "${greenbg}" make -f /path/to/makejava/makejava.mk configure "${reset}"
-	@echo -e to install makefile in current directory and start to build java project
+	@echo -e For info type:
+	@echo -e "${inverse}" make describe "${reset}"
+	@echo -e to install makefile in current directory and start to build java project:
+	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk configure "${reset}"
 
 describe : 
 	@echo -e "                ${e}[4m" makejava.mk "${e}[0m"
@@ -32,7 +34,7 @@ describe :
 	@echo -e makejava.mk is a makefile to handle the build of a java project.
 	@echo -e After cloned from github or copied by others means, from the working 
 	@echo -e directory of the java project, execute 
-	@echo -e -n "${e}[7m"
+	@echo -e -n "${inverse}"
 	@echo -e make -f /path/to/makejava/makejava.mk configure
 	@echo -e -n "${e}[0m"
 	@echo -e The above command will create a makefile in the working directory.
