@@ -15,6 +15,7 @@ vpath %.class $(subst src,bin,$(VPATH)):bin
 e = \033
 greenbg = "\${e}[42m"
 graybg = "\${e}[40m"
+greenfg = "\${e}[92m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
@@ -54,7 +55,7 @@ lib/junit-platform-console-standalone-1.6.0.jar :
 	@if [ -x "makejava.mk" ]; then $(download) else $(makelink) fi
 	@if [ -d lib ]; then printf "lib done\n"; fi
 
-%.class: %.java
+%.class : %.java
 	@echo -e "${e}[92mCompiling :${e}[0m" 
 	javac -d bin -cp $(classpath) $<
 
@@ -72,8 +73,9 @@ endif
 
 test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
-	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; fi
-	java -jar lib/* @TestClasses -cp $(classpath) --include-engine junit-jupiter --exclude-engine junit-vintage | sed '/^[[ ] .*/d'
+	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
+	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; else echo -e "${greenfg}"; echo "Testing classes in TestClasses file"; cat TestClasses | sed 's/-c /-> /g'; echo -e "${reset}"; fi
+	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
 
 checkvars :
 	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
