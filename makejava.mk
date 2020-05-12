@@ -77,7 +77,7 @@ test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
 	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; else echo -e "${greenfg}"; echo "Testing classes in TestClasses file"; cat TestClasses | sed 's/-c /-> /g'; echo -e "${reset}"; fi
-	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
+	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d'
 
 checkvars :
 	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
