@@ -10,7 +10,10 @@ mainclass = $(shell echo $(mainfqn) | sed 's%^.*\.\(.*\)$$%\1%g')
 sources = $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | sed 's%^.*/\(.*\)\.java:.*$$%\1%g'| uniq )
 # bin existe
-classpath = .:bin:src:lib/*
+classpath = .:bin:src:lib/*:zip/*
+mockitojars = zip/mockito-all-2.0.2-beta.jar
+# mockitojars = mok/mockito-core-3.3.3.jar:mok/byte-buddy-1.10-5.jar:mok/byte-buddy-agent-1.10.5.jar:mok/objenesis-2.6.jar
+
 vpath %.class $(subst src,bin,$(VPATH)):bin
 e = \033
 inverse = "\${e}[7m"
@@ -20,12 +23,12 @@ greenfg = "\${e}[92m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
-makelink = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
+makelink = ln -s $(dir $(MAKEFILE_LIST))lib/ lib; ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
 
 usage : 
 	@echo -e For info type:
 	@echo -e "${inverse}" make describe "${reset}"
-	@echo -e to install makefile in current directory and start to build java project:
+	@echo -e To install makefile in current directory and start to build java project:
 	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk configure "${reset}"
 
 describe : 
@@ -77,7 +80,9 @@ test : build
 	@echo -e "${e}[92mRunning tests:${e}[0m" 
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
 	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; else echo -e "${greenfg}"; echo "Testing classes in TestClasses file"; cat TestClasses | sed 's/-c /-> /g'; echo -e "${reset}"; fi
-	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d'
+	#java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines
+#	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
+	java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
 	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
@@ -105,8 +110,9 @@ tipsbanner :
 	@echo -e "${e}[0m"
 
 imports :
-	@echo -e import static org.junit.jupiter.api.Assertions.assertArrayEquals\;
-	@echo -e import static org.junit.jupiter.api.Assertions.assertEquals\;
-	@echo -e import org.junit.jupiter.api.Test\;
-	@echo -e import org.junit.jupiter.api.BeforeEach\;
-
+	@if [ -f "CurrentPackageName" ]; then cat CurrentPackageName; else echo package paquete\; ; fi
+	@echo 
+	@echo -e import static org.junit.jupiter.api.Assertions.*\;
+	@echo -e import static org.mockito.Mockito.*\;
+	@echo -e import org.junit.jupiter.api.*\;
+	@echo 
