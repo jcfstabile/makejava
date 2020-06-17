@@ -2,6 +2,8 @@
 #
 # template start
 .PHONY: build clean run test
+# couse bash echo accept -e to interpret escape codes
+SHELL = /bin/bash
 # https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
 VPATH = $(shell find -name '*.java' | sed 's%^\./\(.*\)/.*$$%\1%g' | uniq | paste -sd':' )
 # the following line has a bug... or the use of its output do. the === in main is for disable this behave
