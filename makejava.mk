@@ -22,8 +22,10 @@ graybg = "\${e}[40m"
 greenfg = "\${e}[92m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
-download = echo -e "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
-makelink = ln -s $(dir $(MAKEFILE_LIST))lib/ lib; ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
+downloadJUnit = echo "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
+downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p zip; wget -nv -P zip https://repo1.maven.org/maven2/org/mockito/mockito-all/2.0.2-beta/mockito-all-2.0.2-beta.jar;
+makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
+makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
 
 usage : 
 	@echo -e For info type:
@@ -47,7 +49,7 @@ describe :
 	@echo -e 
 
 #build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-build: bin/ lib/ $(sources:.java=.class) 
+build: bin/ lib/ zip/ $(sources:.java=.class) 
 	@echo -e "${e}[92mBuild done.${e}[0m"
 
 bin/ :
@@ -56,9 +58,16 @@ bin/ :
 lib/ : lib/junit-platform-console-standalone-1.6.0.jar
 	@:
 
+zip/ : zip/mockito-all-2.0.2-beta.jar
+	@:
+
 lib/junit-platform-console-standalone-1.6.0.jar :
-	@if [ -x "makejava.mk" ]; then $(download) else $(makelink) fi
+	@if [ -x "makejava.mk" ]; then $(downloadJUnit) else $(makelinkLib) fi
 	@if [ -d lib ]; then printf "lib done\n"; fi
+
+zip/mockito-all-2.0.2-beta.jar :
+	@if [ -x "makejava.mk" ]; then $(downloadMockito) else $(makelinkZip) fi
+	@if [ -d zip ]; then printf "zip done\n"; fi
 
 %.class : %.java
 	@echo -e "${e}[92mCompiling :${e}[0m" 
@@ -94,7 +103,7 @@ checkvars :
 
 
 ### genera un makefile configurado automaticamente
-configure : lib/
+configure : lib/ zip/
 	@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
 	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
