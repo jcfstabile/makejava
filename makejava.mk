@@ -22,6 +22,8 @@ inverse = "\${e}[7m"
 greenbg = "\${e}[42m"
 graybg = "\${e}[40m"
 greenfg = "\${e}[92m"
+yellowfg = "\${e}[93m"
+bluefg = "\${e}[94m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 downloadJUnit = echo "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
@@ -127,3 +129,7 @@ imports :
 	@echo -e import static org.mockito.Mockito.*\;
 	@echo -e import org.junit.jupiter.api.*\;
 	@echo 
+
+update :
+	@echo -e "${bluefg}Updating makefile${reset}"
+	@make -f ~/makejava/makejava.mk configure
