@@ -108,11 +108,15 @@ checkvars :
 
 ### genera un makefile configurado automaticamente
 configure : lib/ zip/
+ifneq (,$(wildcard ./makejava.mk))
+	@echo "Still on makejava directory. Nothing done."
+else
 	@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
 	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
 	@printf "${graybg} makefile written on $(shell pwd) ${reset}\n"
 	@printf "# use: make build ; make run ; make test\n"
+endif
 
 tips : tipsbanner imports
 
