@@ -18,13 +18,17 @@ mockitojars = zip/mockito-all-2.0.2-beta.jar
 
 vpath %.class $(subst src,bin,$(VPATH)):bin
 e = \033
+underscore = "\${e}[4m"
 inverse = "\${e}[7m"
 greenbg = "\${e}[42m"
 graybg = "\${e}[40m"
+magentafg = "\${e}[95m"
+bluefg = "\${e}[94m"
+yellowfg = "\${e}[93m"
 greenfg = "\${e}[92m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
-downloadJUnit = echo "${e}[92mDownloading junit 5 platform console:${e}[0m"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
+downloadJUnit = echo "${greenfg}Downloading junit 5 platform console:${reset}"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
 downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p zip; wget -nv -P zip https://repo1.maven.org/maven2/org/mockito/mockito-all/2.0.2-beta/mockito-all-2.0.2-beta.jar;
 makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
@@ -36,14 +40,14 @@ usage :
 	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk configure "${reset}"
 
 describe : 
-	@echo -e "                ${e}[4m" makejava.mk "${e}[0m"
+	@echo -e "                ${underscore}" makejava.mk "${reset}"
 	@echo
 	@echo -e makejava.mk is a makefile to handle the build of a java project.
 	@echo -e After cloned from github or copied by others means, from the working 
 	@echo -e directory of the java project, execute 
 	@echo -e -n "${inverse}"
 	@echo -e make -f /path/to/makejava/makejava.mk configure
-	@echo -e -n "${e}[0m"
+	@echo -e -n "${reset}"
 	@echo -e The above command will create a makefile in the working directory.
 	@echo -e Now use this makefile to handle the project. i.e.
 	@echo
@@ -52,7 +56,7 @@ describe :
 
 #build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
 build: bin/ lib/ zip/ $(sources:.java=.class) 
-	@echo -e "${e}[92mBuild done.${e}[0m"
+	@echo -e "${greenfg}Build done.${reset}"
 
 bin/ :
 	mkdir -p bin
@@ -72,23 +76,23 @@ zip/mockito-all-2.0.2-beta.jar :
 	@if [ -d zip ]; then printf "zip done\n"; fi
 
 %.class : %.java
-	@echo -e "${e}[92mCompiling :${e}[0m" 
+	@echo -e "${greenfg}Compiling :${reset}" 
 	javac -d bin -cp $(classpath) $<
 
 clean:
-	@echo -e "${e}[92mCleaning bin dir:${e}[0m" 
+	@echo -e "${greenfg}Cleaning bin dir:${reset}" 
 	find bin -name '*.class' -exec rm -v {} \+
 
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
-	@echo -e "${e}[92mRunning main method found:${e}[0m" 
+	@echo -e "${greenfg}Running main method found:${reset}" 
 	@java -cp $(classpath) $(mainfqn)
 else
-	@echo -e "${e}[93mNo main method found.${e}[0m" 
+	@echo -e "${yellowfg}No main method found.${reset}" 
 endif
 
 test : build
-	@echo -e "${e}[92mRunning tests:${e}[0m" 
+	@echo -e "${greenfg}Running tests:${reset}" 
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
 	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; else echo -e "${greenfg}"; echo "Testing classes in TestClasses file"; cat TestClasses | sed 's/-c /-> /g'; echo -e "${reset}"; fi
 	#java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines
@@ -96,12 +100,13 @@ test : build
 	java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
-	@echo -e "${e}[91mVPATH${e}[0m" $(VPATH)
-	@echo -e "${e}[91mmainfqn${e}[0m" $(mainfqn)
-	@echo -e "${e}[91mmainclass${e}[0m" $(mainclass)
-	@echo -e "${e}[91msources${e}[0m" $(sources)
-	@echo -e "${e}[91mtestclass${e}[0m" $(testclass)
-	@echo -e "${e}[91mclasspath${e}[0m" $(classpath)
+	@echo -e "${redfg}VPATH${reset}" $(VPATH)
+	@echo -e "${redfg}MAKEFILE_LIST${reset}" $(MAKEFILE_LIST)
+	@echo -e "${redfg}mainfqn${reset}" $(mainfqn)
+	@echo -e "${redfg}mainclass${reset}" $(mainclass)
+	@echo -e "${redfg}sources${reset}" $(sources)
+	@echo -e "${redfg}testclass${reset}" $(testclass)
+	@echo -e "${redfg}classpath${reset}" $(classpath)
 
 
 ### genera un makefile configurado automaticamente
@@ -115,10 +120,10 @@ configure : lib/ zip/
 tips : tipsbanner imports
 
 tipsbanner : 
-	@echo -e -n "${e}[94m"
+	@echo -e -n "${bluefg}"
 	@echo -e Basics imports needed to include in test classes
-	@echo -e "ie. insert easily with: ${e}[95m make imports >> src/ClassTests.java"
-	@echo -e "${e}[0m"
+	@echo -e "ie. insert easily with: ${magentafg} make imports >> src/ClassTests.java"
+	@echo -e "${reset}"
 
 imports :
 	@if [ -f "CurrentPackageName" ]; then cat CurrentPackageName; else echo package paquete\; ; fi
