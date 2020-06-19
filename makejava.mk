@@ -26,6 +26,8 @@ magentafg = "\${e}[95m"
 bluefg = "\${e}[94m"
 yellowfg = "\${e}[93m"
 greenfg = "\${e}[92m"
+yellowfg = "\${e}[93m"
+bluefg = "\${e}[94m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
 downloadJUnit = echo "${greenfg}Downloading junit 5 platform console:${reset}"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
@@ -111,11 +113,15 @@ checkvars :
 
 ### genera un makefile configurado automaticamente
 configure : lib/ zip/
+ifneq (,$(wildcard ./makejava.mk))
+	@echo "Still on makejava directory. Nothing done."
+else
 	@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
 	# $(dir $(MAKEFILE_LIST)) is absolute path
 	@cat $(MAKEFILE_LIST) >> makefile
 	@printf "${graybg} makefile written on $(shell pwd) ${reset}\n"
 	@printf "# use: make build ; make run ; make test\n"
+endif
 
 tips : tipsbanner imports
 
@@ -132,3 +138,7 @@ imports :
 	@echo -e import static org.mockito.Mockito.*\;
 	@echo -e import org.junit.jupiter.api.*\;
 	@echo 
+
+update :
+	@echo -e "${bluefg}Updating makefile${reset}"
+	@make -f ~/makejava/makejava.mk configure
