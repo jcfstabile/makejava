@@ -2,6 +2,8 @@
 #
 # template start
 .PHONY: build clean run test
+# couse here-document, on class rule, is undivisible
+.ONESHELL :
 # couse bash echo accept -e to interpret escape codes
 SHELL = /bin/bash
 # https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar
@@ -34,6 +36,8 @@ downloadJUnit = echo "${greenfg}Downloading junit 5 platform console:${reset}"; 
 downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p zip; wget -nv -P zip https://repo1.maven.org/maven2/org/mockito/mockito-all/2.0.2-beta/mockito-all-2.0.2-beta.jar;
 makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
+
+packagename = $(shell cat CurrentPackageName)
 
 usage : 
 	@echo -e For info type:
@@ -142,3 +146,12 @@ imports :
 update :
 	@echo -e "${bluefg}Updating makefile${reset}"
 	@make -f ~/makejava/makejava.mk configure
+
+class :
+	@echo Creating ${classname}.java on  ${packagename}
+	$(shell cat > class.sh <<EOF
+	export packagename=\$$(cat CurrentPackageName)
+	echo -e 'package \$${packagename};\n\npublic class \$${classname} {\n}' > src/\$${packagename//.//}/\$${classname}.java
+	EOF
+	)
+	. ./class.sh && rm class.sh
