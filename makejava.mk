@@ -37,7 +37,7 @@ downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p 
 makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
 
-packagename = $(shell cat CurrentPackageName)
+packagename = $(shell [ -f CurrentPackageName ] && cat CurrentPackageName)
 
 usage : 
 	@echo -e For info type:
@@ -116,6 +116,10 @@ checkvars :
 	@echo -e "${redfg}sources${reset}" $(sources)
 	@echo -e "${redfg}testclass${reset}" $(testclass)
 	@echo -e "${redfg}classpath${reset}" $(classpath)
+	@echo -e "${redfg}classname${reset}" $(classname)
+	@echo -e "${redfg}packagename${reset}" $(packagename)
+	@echo -e "${redfg}support:${reset}" $(.FEATURES)
+
 
 
 ### genera un makefile configurado automaticamente
@@ -151,10 +155,44 @@ update :
 	@make -f ~/makejava/makejava.mk configure
 
 class :
-	@echo Creating ${classname}.java on  ${packagename}
+ifneq (,$(word 2, ${classname} ${packagename}))
+	@echo Creating ${classname}.java on ${packagename}
 	$(shell cat > class.sh <<EOF
-	export packagename=\$$(cat CurrentPackageName)
+	# export packagename=\$$(cat CurrentPackageName)
+	export packagename=$(packagename)
 	echo -e "package \$${packagename};\n\npublic class \$${classname} {\n}" > src/\$${packagename//.//}/\$${classname}.java
 	EOF
 	)
 	. ./class.sh && rm class.sh
+else
+	@echo Just ${classname} ${packagename} is defined.
+endif
+
+## ### guile support experiment
+## define GUILEIO
+## ;; A simple Guile IO library for GNU make (from: info make)
+## 
+## (define MKPORT #f)
+## 
+## (define (mkopen name mode)
+## 	(set! MKPORT (open-file name mode))
+## 	#f)
+## 
+## (define (mkwrite s)
+## 	(display s MKPORT)
+## 	(newline MKPORT)
+## 	#f)
+## 
+## (define (mkclose)
+## 	(close-port MKPORT)
+## 	#f)
+## #f
+## endef
+## 
+## $(guile $(GUILEIO))
+## 
+## isguile :
+## 	$(guile (mkopen "tmp.out" "w"))
+## 	$(foreach X,$^,$(guile (mkwrite "$(X)")))
+## 	$(guile (mkclose))
+## 	cat < tmp.out
