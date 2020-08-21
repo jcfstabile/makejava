@@ -154,5 +154,4 @@ class :
 	echo -e "package \$${packagename};\n\npublic class \$${classname} {\n}" > src/\$${packagename//.//}/\$${classname}.java
 	EOF
 	)
-	. ./class.sh
-	# && rm class.sh
+	. ./class.sh && rm class.sh
