@@ -19,9 +19,18 @@ Now use _make_ to: build, clear, run and test the project.
   or  
 `$ make run`  
 
+
+### Handy Features.
+
 #### See tips to easily code junit jupiter platform test classes.
 
 `$ make tips`
+
+##### Create class esqueleton.
+
+`$ classname=Ecuator packagename=com.valetudo make class`
+
+will create `src/com/valetudo/Ecuator.java` file.
 
 #### Dependencies.
 
