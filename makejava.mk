@@ -82,12 +82,15 @@ zip/mockito-all-2.0.2-beta.jar :
 	@if [ -d zip ]; then printf "zip done\n"; fi
 
 %.class : %.java
-	@echo -e "${greenfg}Compiling :${reset}" 
+	@echo -e "${greenfg}Compiling : $< ${reset}" 
 	javac -d bin -cp $(classpath) $<
 
 clean:
 	@echo -e "${greenfg}Cleaning bin dir:${reset}" 
 	find bin -name '*.class' -exec rm -v {} \+
+
+rebuild : clean build
+	@:
 
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
