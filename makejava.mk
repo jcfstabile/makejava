@@ -151,7 +151,8 @@ class :
 	@echo Creating ${classname}.java on  ${packagename}
 	$(shell cat > class.sh <<EOF
 	export packagename=\$$(cat CurrentPackageName)
-	echo -e 'package \$${packagename};\n\npublic class \$${classname} {\n}' > src/\$${packagename//.//}/\$${classname}.java
+	echo -e "package \$${packagename};\n\npublic class \$${classname} {\n}" > src/\$${packagename//.//}/\$${classname}.java
 	EOF
 	)
-	. ./class.sh && rm class.sh
+	. ./class.sh
+	# && rm class.sh
