@@ -37,7 +37,10 @@ downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p 
 makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
 
+ifeq (,${packagename})
 packagename = $(shell [ -f CurrentPackageName ] && cat CurrentPackageName)
+else
+endif
 
 usage : 
 	@echo -e For info type:
@@ -118,9 +121,7 @@ checkvars :
 	@echo -e "${redfg}classpath${reset}" $(classpath)
 	@echo -e "${redfg}classname${reset}" $(classname)
 	@echo -e "${redfg}packagename${reset}" $(packagename)
-	@echo -e "${redfg}support:${reset}" $(.FEATURES)
-
-
+	@echo -e "${redfg}.FEATURES:${reset}" $(.FEATURES)
 
 ### genera un makefile configurado automaticamente
 configure : lib/ zip/
@@ -158,14 +159,13 @@ class :
 ifneq (,$(word 2, ${classname} ${packagename}))
 	@echo Creating ${classname}.java on ${packagename}
 	$(shell cat > class.sh <<EOF
-	# export packagename=\$$(cat CurrentPackageName)
 	export packagename=$(packagename)
 	echo -e "package \$${packagename};\n\npublic class \$${classname} {\n}" > src/\$${packagename//.//}/\$${classname}.java
 	EOF
 	)
 	. ./class.sh && rm class.sh
 else
-	@echo Just ${classname} ${packagename} is defined.
+	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
 endif
 
 ## ### guile support experiment
