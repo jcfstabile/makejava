@@ -86,7 +86,7 @@ zip/mockito-all-2.0.2-beta.jar :
 
 %.class : %.java
 	@echo -e "${greenfg}Compiling : $< ${reset}" 
-	javac -d bin -cp $(classpath) $<
+	javac ${option} -d bin -cp $(classpath) $<
 
 clean:
 	@echo -e "${greenfg}Cleaning bin dir:${reset}" 
