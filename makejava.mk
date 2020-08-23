@@ -143,27 +143,37 @@ tipsbanner :
 	@echo -e "ie. insert easily with: ${magentafg} make imports >> src/ClassTests.java"
 	@echo -e "${reset}"
 
+packagehead = package ${packagename}\;\\r\\f\\f
+imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
+classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
+testdef =  public class ${classname} {\\n\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
+
 imports :
-	@if [ -f "CurrentPackageName" ]; then cat CurrentPackageName; else echo package paquete\; ; fi
-	@echo 
-	@echo -e import static org.junit.jupiter.api.Assertions.*\;
-	@echo -e import static org.mockito.Mockito.*\;
-	@echo -e import org.junit.jupiter.api.*\;
-	@echo 
+	@echo -e $(packagehead)$(imports)
 
 update :
 	@echo -e "${bluefg}Updating makefile${reset}"
 	@make -f ~/makejava/makejava.mk configure
 
-class :
+
+packagefn = $(subst .,/,${packagename})/
+packageclassfn = $(packagefn)${classname}.java
+testdir = test/
+srcdir = src/
+
+$(testdir)$(packagefn) :
+	mkdir -p $(testdir)$(packagefn) 
+
+$(srcdir)$(packagefn) :
+	mkdir -p $(srcdir)$(packagefn) 
+
+testclass : $(testdir)$(packagefn)
+	@echo -e $(packagehead)$(imports)$(testdef) > $(testdir)$(packageclassfn)
+	
+class : $(srcdir)$(packagefn)  
 ifneq (,$(word 2, ${classname} ${packagename}))
 	@echo Creating ${classname}.java on ${packagename}
-	$(shell cat > class.sh <<EOF
-	export packagename=$(packagename)
-	echo -e "package \$${packagename};\n\npublic class \$${classname} {\n}" > src/\$${packagename//.//}/\$${classname}.java
-	EOF
-	)
-	. ./class.sh && rm class.sh
+	@echo -e $(packagehead)$(imports)$(classdef) > $(srcdir)$(packageclassfn)
 else
 	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
 endif
