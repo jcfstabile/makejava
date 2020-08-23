@@ -143,10 +143,11 @@ tipsbanner :
 	@echo -e "ie. insert easily with: ${magentafg} make imports >> src/ClassTests.java"
 	@echo -e "${reset}"
 
-packagehead = package ${packagename}\;\\r\\f\\f
+packagehead = package ${packagename}\;\\n\\n
 imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
 classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
 testdef =  public class ${classname} {\\n\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
+interfacedef =  interface ${interfacename} {\\n}
 
 imports :
 	@echo -e $(packagehead)$(imports)
@@ -158,6 +159,7 @@ update :
 
 packagefn = $(subst .,/,${packagename})/
 packageclassfn = $(packagefn)${classname}.java
+packageinterfacefn = $(packagefn)${interfacename}.java
 testdir = test/
 srcdir = src/
 
@@ -166,6 +168,14 @@ $(testdir)$(packagefn) :
 
 $(srcdir)$(packagefn) :
 	mkdir -p $(srcdir)$(packagefn) 
+
+interface : $(srcdir)$(packagefn)
+ifneq (,$(word 2, ${interfacename} ${packagename}))
+	@echo Creating ${interfacename}.java on ${packagename}
+	@echo -e $(packagehead)$(interfacedef) > $(srcdir)$(packageinterfacefn)
+else
+	$(if ${interfacename}${packagename}, @echo Just ${interfacename}${packagename} has been defined., @echo Nothing defined.)
+endif
 
 testclass : $(testdir)$(packagefn)
 ifneq (,$(word 2, ${classname} ${packagename}))
@@ -178,7 +188,7 @@ endif
 class : $(srcdir)$(packagefn)  
 ifneq (,$(word 2, ${classname} ${packagename}))
 	@echo Creating ${classname}.java on ${packagename}
-	@echo -e $(packagehead)$(imports)$(classdef) > $(srcdir)$(packageclassfn)
+	@echo -e $(packagehead)$(classdef) > $(srcdir)$(packageclassfn)
 else
 	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
 endif
