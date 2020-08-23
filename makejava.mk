@@ -168,7 +168,12 @@ $(srcdir)$(packagefn) :
 	mkdir -p $(srcdir)$(packagefn) 
 
 testclass : $(testdir)$(packagefn)
+ifneq (,$(word 2, ${classname} ${packagename}))
+	@echo Creating ${classname}.java on ${packagename}
 	@echo -e $(packagehead)$(imports)$(testdef) > $(testdir)$(packageclassfn)
+else
+	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
+endif
 	
 class : $(srcdir)$(packagefn)  
 ifneq (,$(word 2, ${classname} ${packagename}))
