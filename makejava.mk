@@ -148,8 +148,8 @@ creates :
 	@echo -e "Create classes, testclasses and intefaces on packages, ie:"
 	@echo -e "${magentafg}"
 	@echo -e "# classname=Dog packagename=ar.edu.unq.animals make class"
-	@echo -e "# testclass=CatTest packagename=ar.edu.unq.animals make testclass"
-	@echo -e "# interface=IMammal packagename=ar.edu.unq.animals make interface"
+	@echo -e "# classname=CatTest packagename=ar.edu.unq.animals make testclass"
+	@echo -e "# interfacename=IMammal packagename=ar.edu.unq.animals make interface"
 	@echo -e "${reset}"
 
 packagehead = package ${packagename}\;\\n\\n
