@@ -26,11 +26,19 @@ Now use _make_ to: build, clear, run and test the project.
 
 `$ make tips`
 
-##### Create class esqueleton.
+##### Create class esqueletons. Interface and JUnit test classes.
 
-`$ classname=Ecuator packagename=com.valetudo make class`
+`$ classname=Dog packagename=ar.edu.unq.animals make class`
 
-will create `src/com/valetudo/Ecuator.java` file.
+will create `src/ar/edu/unq/animals/Dog.java` file.
+
+`$ classname=CatTest packagename=ar.edu.unq.animals make testclass`
+
+will create `test/ar/edu/unq/animals/CatTest.java` file.
+
+`$ interfacename=IMammal packagename=ar.edu.unq.animals make interface`
+
+will create `src/ar/edu/unq/animals/IMammal.java` file.
 
 #### Dependencies.
 
