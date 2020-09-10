@@ -135,12 +135,21 @@ else
 	@printf "# use: make build ; make run ; make test\n"
 endif
 
-tips : tipsbanner imports
+tips : tipsbanner imports creates
 
 tipsbanner : 
 	@echo -e -n "${bluefg}"
 	@echo -e Basics imports needed to include in test classes
 	@echo -e "ie. insert easily with: ${magentafg} make imports >> src/ClassTests.java"
+	@echo -e "${reset}"
+
+creates : 
+	@echo -e -n "${bluefg}"
+	@echo -e "Create classes, testclasses and intefaces on packages, ie:"
+	@echo -e "${magentafg}"
+	@echo -e "# classname=Dog packagename=ar.edu.unq.animals make class"
+	@echo -e "# testclass=CatTest packagename=ar.edu.unq.animals make testclass"
+	@echo -e "# interface=IMammal packagename=ar.edu.unq.animals make interface"
 	@echo -e "${reset}"
 
 packagehead = package ${packagename}\;\\n\\n
