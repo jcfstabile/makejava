@@ -156,7 +156,7 @@ packagehead = package ${packagename}\;\\n\\n
 imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
 classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
 testdef =  public class ${classname} {\\n\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
-interfacedef =  interface ${interfacename} {\\n}
+interfacedef =  public interface ${interfacename} {\\n}
 
 imports :
 	@echo -e $(packagehead)$(imports)
