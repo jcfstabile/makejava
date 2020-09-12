@@ -106,10 +106,10 @@ endif
 test : build
 	@echo -e "${greenfg}Running tests:${reset}" 
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
-	@if [ ! -f "TestClasses" ]; then echo "--scan-class-path" > TestClasses ; else echo -e "${greenfg}"; echo "Testing classes in TestClasses file"; cat TestClasses | sed 's/-c /-> /g'; echo -e "${reset}"; fi
-	#java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines
-#	java -jar lib/* @TestClasses -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
-	java -jar lib/* @TestClasses -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	@if [ ! -f "JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in JUnitConsoleLauncherOptions file"; cat JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
+	#java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
+#	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
+	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
 	@echo -e "${redfg}VPATH${reset}" $(VPATH)
