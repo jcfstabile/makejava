@@ -109,7 +109,7 @@ test : build
 	@if [ ! -f "JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in JUnitConsoleLauncherOptions file"; cat JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
 	#java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
 #	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
-	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	java -jar lib/* @JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
 	@echo -e "${redfg}VPATH${reset}" $(VPATH)
@@ -153,9 +153,9 @@ creates :
 	@echo -e "${reset}"
 
 packagehead = package ${packagename}\;\\n\\n
-imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
+imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.junit.jupiter.api.Assumptions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
 classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
-testdef =  public class ${classname} {\\n\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
+testdef =  public class ${classname} {\\n\\n"    "@DisplayName\(\"\"\)\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
 interfacedef =  public interface ${interfacename} {\\n}
 
 imports :
@@ -202,6 +202,13 @@ else
 	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
 endif
 
+##
+## https://junit.org/junit5/docs/5.1.0-M1/user-guide/#running-tests-console-launcher
+## Solo algunos ejemplos para junitoption env var passing
+## -p, --select-package <String>                 Select a package for test discovery. This option can be repeated.
+## -c, --select-class <String>                   Select a class for test discovery. This option can be repeated. ie: com.java.ClassName
+## -m, --select-method <String>                  Select a method for test discovery. This ##
+##
 ## ### guile support experiment
 ## define GUILEIO
 ## ;; A simple Guile IO library for GNU make (from: info make)
