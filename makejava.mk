@@ -128,10 +128,11 @@ configure : lib/ zip/
 ifneq (,$(wildcard ./makejava.mk))
 	@echo "Still on makejava directory. Nothing done."
 else
-	@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
-	# $(dir $(MAKEFILE_LIST)) is absolute path
-	@cat $(MAKEFILE_LIST) >> makefile
-	@printf "${graybg} makefile written on $(shell pwd) ${reset}\n"
+	@#@printf "# makefile autoconfigurado on $(CURDIR)\n" > makefile
+	@# $(dir $(MAKEFILE_LIST)) is absolute path
+	@# @cat $(MAKEFILE_LIST) >> makefile
+	@ln -s $(MAKEFILE_LIST) makefile
+	@printf "${graybg}makefile symlink created on $(shell pwd) ${reset}\n"
 	@printf "# use: make build ; make run ; make test\n"
 endif
 
