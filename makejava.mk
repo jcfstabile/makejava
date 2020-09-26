@@ -156,7 +156,7 @@ creates :
 packagehead = package ${packagename}\;\\n\\n
 imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.junit.jupiter.api.Assumptions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
 classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
-testdef =  public class ${classname} {\\n\\n"    "@DisplayName\(\"\"\)\\n"    "@Test\\n"    "void test1\(\) {\\n"    "}\\n}
+testdef =  public class ${classname} {\\n\\n"    "@DisplayName\(\" \"\)\\n"    "@Test\\n"    "void test1\(\) {\\n"        "fail\(\"Test aun no implementado\"\)\;\\n"    "}\\n}
 interfacedef =  public interface ${interfacename} {\\n}
 
 imports :
@@ -209,6 +209,9 @@ endif
 ## -p, --select-package <String>                 Select a package for test discovery. This option can be repeated.
 ## -c, --select-class <String>                   Select a class for test discovery. This option can be repeated. ie: com.java.ClassName
 ## -m, --select-method <String>                  Select a method for test discovery. This ##
+##
+## por ejemplo para la clase de test CaseTest en test/ar/edu/unq/po2/CaseTest.java hacemos:
+## --select-class ar.edu.unq.po2.CaseTest
 ##
 ## ### guile support experiment
 ## define GUILEIO
