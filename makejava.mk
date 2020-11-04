@@ -37,6 +37,7 @@ downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p 
 makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
 makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
 
+
 ifeq (,${packagename})
 packagename = $(shell [ -f CurrentPackageName ] && cat CurrentPackageName)
 else
@@ -62,6 +63,9 @@ describe :
 	@echo
 	@echo -e "make build ; make run ; make test"
 	@echo -e 
+	@echo -e See what and how classes can be created with\: make creates
+	@echo -e 
+
 
 #build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
 build: bin/ lib/ zip/ $(sources:.java=.class) 
@@ -86,7 +90,7 @@ zip/mockito-all-2.0.2-beta.jar :
 
 %.class : %.java
 	@echo -e "${greenfg}Compiling : $< ${reset}" 
-	javac ${option} -d bin -cp $(classpath) $<
+	javac ${option} -encoding $(shell file -i $< | sed 's/^.*charset=//g') -d bin -cp $(classpath) $<
 
 clean:
 	@echo -e "${greenfg}Cleaning bin dir:${reset}" 
@@ -103,12 +107,16 @@ else
 	@echo -e "${yellowfg}No main method found.${reset}" 
 endif
 
-test : build
-	@echo -e "${greenfg}Running tests:${reset}" 
+adminfiles : 
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
 	@if [ ! -f "JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in JUnitConsoleLauncherOptions file"; cat JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
-	#java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
-#	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
+
+testv : adminfiles build
+	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
+
+test : adminfiles build
+	@echo -e "${greenfg}Running tests:${reset}" 
+	#java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
 	java -jar lib/* @JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
