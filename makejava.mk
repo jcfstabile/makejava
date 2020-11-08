@@ -111,6 +111,9 @@ adminfiles :
 	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
 	@if [ ! -f "JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in JUnitConsoleLauncherOptions file"; cat JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
 
+testall : 
+	java -jar lib/* --scan-class-path $(junitoption) -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	
 testv : adminfiles build
 	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
 
@@ -162,8 +165,8 @@ creates :
 	@echo -e "${reset}"
 
 packagehead = package ${packagename}\;\\n\\n
-imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.junit.jupiter.api.Assumptions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
-classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"    "}\\n}
+imports = import static org.junit.jupiter.api.Assertions.*\;\\n\import static org.mockito.Mockito.*\;\\nimport org.junit.jupiter.api.*\;\\n\\n
+classdef = public class ${classname} {\\n\\n"    "public ${classname}\(\) {\\n"        super();"\\n"    "}\\n}
 testdef =  public class ${classname} {\\n\\n"    "@DisplayName\(\" \"\)\\n"    "@Test\\n"    "void test1\(\) {\\n"        "fail\(\"Test aun no implementado\"\)\;\\n"    "}\\n}
 interfacedef =  public interface ${interfacename} {\\n}
 
