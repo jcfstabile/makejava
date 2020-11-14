@@ -14,8 +14,8 @@ mainclass = $(shell echo $(mainfqn) | sed 's%^.*\.\(.*\)$$%\1%g')
 sources = $(shell find -name '*.java' | sed 's%^.*/\(.*\)$$%\1%g' | paste -sd' ')
 testclass = $(shell find -name '*.java' -exec grep "import *org.junit" {} \+ | sed 's%^.*/\(.*\)\.java:.*$$%\1%g'| uniq )
 # bin existe
-classpath = .:bin:src:lib/*:zip/*
-mockitojars = zip/mockito-all-2.0.2-beta.jar
+classpath = .:bin:src:.makejava/lib/*:.makejava/zip/*
+mockitojars = .makejava/zip/mockito-all-2.0.2-beta.jar
 # mockitojars = mok/mockito-core-3.3.3.jar:mok/byte-buddy-1.10-5.jar:mok/byte-buddy-agent-1.10.5.jar:mok/objenesis-2.6.jar
 
 vpath %.class $(subst src,bin,$(VPATH)):bin
@@ -32,14 +32,14 @@ yellowfg = "\${e}[93m"
 bluefg = "\${e}[94m"
 redfg = "\${e}[91m"
 reset   = "\${e}[0m"
-downloadJUnit = echo "${greenfg}Downloading junit 5 platform console:${reset}"; mkdir -p lib; wget -nv -P lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
-downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p zip; wget -nv -P zip https://repo1.maven.org/maven2/org/mockito/mockito-all/2.0.2-beta/mockito-all-2.0.2-beta.jar;
-makelinkLib = ln -s $(dir $(MAKEFILE_LIST))lib/ lib;
-makelinkZip = ln -s $(dir $(MAKEFILE_LIST))zip/ zip;
+downloadJUnit = echo "${greenfg}Downloading junit 5 platform console:${reset}"; mkdir -p .makejava/lib; wget -nv -P .makejava/lib https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.6.0/junit-platform-console-standalone-1.6.0.jar;
+downloadMockito = echo "${greenfg}Downloading mockito 2.0.2:${reset}"; mkdir -p .makejava/zip; wget -nv -P .makejava/zip https://repo1.maven.org/maven2/org/mockito/mockito-all/2.0.2-beta/mockito-all-2.0.2-beta.jar;
+makelinkLib = ln -s $(dir $(MAKEFILE_LIST)).makejava/lib/ .makejava/lib;
+makelinkZip = ln -s $(dir $(MAKEFILE_LIST)).makejava/zip/ .makejava/zip;
 
 
 ifeq (,${packagename})
-packagename = $(shell [ -f CurrentPackageName ] && cat CurrentPackageName)
+packagename = $(shell [ -f .makejava/CurrentPackageName ] && cat .makejava/CurrentPackageName)
 else
 endif
 
@@ -67,26 +67,28 @@ describe :
 	@echo -e 
 
 
-#build: bin/ lib/junit-platform-console-standalone-1.6.0.jar $(sources:.java=.class) 
-build: bin/ lib/ zip/ $(sources:.java=.class) 
+build: bin/ .makejava/lib/ .makejava/zip/ $(sources:.java=.class) 
 	@echo -e "${greenfg}Build done.${reset}"
 
 bin/ :
 	mkdir -p bin
 
-lib/ : lib/junit-platform-console-standalone-1.6.0.jar
+.makejava :
+	mkdir -p .makejava
+
+.makejava/lib/ : .makejava .makejava/lib/junit-platform-console-standalone-1.6.0.jar
 	@:
 
-zip/ : zip/mockito-all-2.0.2-beta.jar
+.makejava/zip/ :  .makejava .makejava/zip/mockito-all-2.0.2-beta.jar
 	@:
 
-lib/junit-platform-console-standalone-1.6.0.jar :
+.makejava/lib/junit-platform-console-standalone-1.6.0.jar :
 	@if [ -x "makejava.mk" ]; then $(downloadJUnit) else $(makelinkLib) fi
-	@if [ -d lib ]; then printf "lib done\n"; fi
+	@if [ -d .makejava/lib ]; then printf "lib done\n"; fi
 
-zip/mockito-all-2.0.2-beta.jar :
+.makejava/zip/mockito-all-2.0.2-beta.jar :
 	@if [ -x "makejava.mk" ]; then $(downloadMockito) else $(makelinkZip) fi
-	@if [ -d zip ]; then printf "zip done\n"; fi
+	@if [ -d .makejava/zip ]; then printf "zip done\n"; fi
 
 %.class : %.java
 	@echo -e "${greenfg}Compiling : $< ${reset}" 
@@ -108,19 +110,20 @@ else
 endif
 
 adminfiles : 
-	@if [ ! -f "Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > Engines ; fi
-	@if [ ! -f "JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in JUnitConsoleLauncherOptions file"; cat JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
+	@if [ ! -f ".makejava/Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > .makejava/Engines ; fi
+	@if [ ! -f ".makejava/JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > .makejava/JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in .makejava/JUnitConsoleLauncherOptions file"; cat .makejava/JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
 
 testall : 
-	java -jar lib/* --scan-class-path $(junitoption) -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	java -jar .makejava/lib/* --scan-class-path $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 	
 testv : adminfiles build
-	java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @Engines
+	java -jar .makejava/lib/* @.makejava/JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @.makejava/Engines
 
 test : adminfiles build
+	#@clear
 	@echo -e "${greenfg}Running tests:${reset}" 
-	#java -jar lib/* @JUnitConsoleLauncherOptions -cp $(classpath) @Engines | sed '/^[[ ] .*/d'
-	java -jar lib/* @JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	#java -jar lib/* @.makejava/JUnitConsoleLauncherOptions -cp $(classpath) @.makejava/Engines | sed '/^[[ ] .*/d'
+	java -jar .makejava/lib/* @.makejava/JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
 
 checkvars :
 	@echo -e "${redfg}VPATH${reset}" $(VPATH)
@@ -135,7 +138,7 @@ checkvars :
 	@echo -e "${redfg}.FEATURES:${reset}" $(.FEATURES)
 
 ### genera un makefile configurado automaticamente
-configure : lib/ zip/
+configure : .makejava/lib/ .makejava/zip/
 ifneq (,$(wildcard ./makejava.mk))
 	@echo "Still on makejava directory. Nothing done."
 else
