@@ -43,18 +43,18 @@ packagename = $(shell [ -f .makejava/CurrentPackageName ] && cat .makejava/Curre
 else
 endif
 
-usage : 
+usage :
 	@echo -e For info type:
 	@echo -e "${inverse}" make describe "${reset}"
 	@echo -e To install makefile in current directory and start to build java project:
 	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk configure "${reset}"
 
-describe : 
+describe :
 	@echo -e "                ${underscore}" makejava.mk "${reset}"
 	@echo
 	@echo -e makejava.mk is a makefile to handle the build of a java project.
-	@echo -e After cloned from github or copied by others means, from the working 
-	@echo -e directory of the java project, execute 
+	@echo -e After cloned from github or copied by others means, from the working
+	@echo -e directory of the java project, execute
 	@echo -e -n "${inverse}"
 	@echo -e make -f /path/to/makejava/makejava.mk configure
 	@echo -e -n "${reset}"
@@ -62,12 +62,12 @@ describe :
 	@echo -e Now use this makefile to handle the project. i.e.
 	@echo
 	@echo -e "make build ; make run ; make test"
-	@echo -e 
+	@echo -e
 	@echo -e See what and how classes can be created with\: make creates
-	@echo -e 
+	@echo -e
 
 
-build: bin/ .makejava/lib/ .makejava/zip/ $(sources:.java=.class) 
+build: bin/ .makejava/lib/ .makejava/zip/ $(sources:.java=.class)
 	@echo -e "${greenfg}Build done.${reset}"
 
 bin/ :
@@ -91,11 +91,11 @@ bin/ :
 	@if [ -d .makejava/zip ]; then printf "zip done\n"; fi
 
 %.class : %.java
-	@echo -e "${greenfg}Compiling : $< ${reset}" 
+	@echo -e "${greenfg}Compiling : $< ${reset}"
 	javac ${option} -encoding $(shell file -i $< | sed 's/^.*charset=//g') -d bin -cp $(classpath) $<
 
 clean:
-	@echo -e "${greenfg}Cleaning bin dir:${reset}" 
+	@echo -e "${greenfg}Cleaning bin dir:${reset}"
 	find bin -name '*.class' -exec rm -v {} \+
 
 rebuild : clean build
@@ -103,27 +103,27 @@ rebuild : clean build
 
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
-	@echo -e "${greenfg}Running main method found:${reset}" 
-	@java -cp $(classpath) $(mainfqn)
+	@echo -e "${greenfg}Running main method found:${reset}"
+	@java -cp $(classpath) $(mainfqn) $(ARG)
 else
-	@echo -e "${yellowfg}No main method found.${reset}" 
+	@echo -e "${yellowfg}No main method found.${reset}"
 endif
 
-adminfiles : 
+adminfiles :
 	@if [ ! -f ".makejava/Engines" ]; then echo "--include-engine junit-jupiter --exclude-engine junit-vintage" > .makejava/Engines ; fi
 	@if [ ! -f ".makejava/JUnitConsoleLauncherOptions" ]; then echo "--scan-class-path" > .makejava/JUnitConsoleLauncherOptions ; else echo -e "${greenfg}"; echo "Testing classes in .makejava/JUnitConsoleLauncherOptions file"; cat .makejava/JUnitConsoleLauncherOptions | sed 's/-c /-> /g'; echo -e "${reset}"; fi
 
-testall : 
-	java -jar .makejava/lib/* --scan-class-path $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
-	
+testall :
+	java -jar .makejava/lib/* --scan-class-path $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d'
+
 testv : adminfiles build
 	java -jar .makejava/lib/* @.makejava/JUnitConsoleLauncherOptions -cp $(classpath):$(mockitojars)  @.makejava/Engines
 
 test : adminfiles build
 	#@clear
-	@echo -e "${greenfg}Running tests:${reset}" 
+	@echo -e "${greenfg}Running tests:${reset}"
 	#java -jar lib/* @.makejava/JUnitConsoleLauncherOptions -cp $(classpath) @.makejava/Engines | sed '/^[[ ] .*/d'
-	java -jar .makejava/lib/* @.makejava/JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d' 
+	java -jar .makejava/lib/* @.makejava/JUnitConsoleLauncherOptions $(junitoption) -cp $(classpath):$(mockitojars)  @.makejava/Engines 2>&1 | sed -e '/.*=>.*/p' -e '/^[[ ] .*/d' -e '/^WARNING.*/d'
 
 checkvars :
 	@echo -e "${redfg}VPATH${reset}" $(VPATH)
@@ -136,6 +136,7 @@ checkvars :
 	@echo -e "${redfg}classname${reset}" $(classname)
 	@echo -e "${redfg}packagename${reset}" $(packagename)
 	@echo -e "${redfg}.FEATURES:${reset}" $(.FEATURES)
+	@echo -e "${redfg}ARG${reset}" $(ARG)
 
 ### genera un makefile configurado automaticamente
 configure : .makejava/lib/ .makejava/zip/
@@ -152,13 +153,13 @@ endif
 
 tips : tipsbanner imports creates
 
-tipsbanner : 
+tipsbanner :
 	@echo -e -n "${bluefg}"
 	@echo -e Basics imports needed to include in test classes
 	@echo -e "ie. insert easily with: ${magentafg} make imports >> src/ClassTests.java"
 	@echo -e "${reset}"
 
-creates : 
+creates :
 	@echo -e -n "${bluefg}"
 	@echo -e "Create classes, testclasses and intefaces on packages, ie:"
 	@echo -e "${magentafg}"
@@ -188,10 +189,10 @@ testdir = test/
 srcdir = src/
 
 $(testdir)$(packagefn) :
-	mkdir -p $(testdir)$(packagefn) 
+	mkdir -p $(testdir)$(packagefn)
 
 $(srcdir)$(packagefn) :
-	mkdir -p $(srcdir)$(packagefn) 
+	mkdir -p $(srcdir)$(packagefn)
 
 interface : $(srcdir)$(packagefn)
 ifneq (,$(word 2, ${interfacename} ${packagename}))
@@ -208,8 +209,8 @@ ifneq (,$(word 2, ${classname} ${packagename}))
 else
 	$(if ${classname}${packagename}, @echo Just ${classname}${packagename} has been defined., @echo Nothing defined.)
 endif
-	
-class : $(srcdir)$(packagefn)  
+
+class : $(srcdir)$(packagefn)
 ifneq (,$(word 2, ${classname} ${packagename}))
 	@echo Creating ${classname}.java on ${packagename}
 	@echo -e $(packagehead)$(classdef) > $(srcdir)$(packageclassfn)
@@ -230,26 +231,26 @@ endif
 ## ### guile support experiment
 ## define GUILEIO
 ## ;; A simple Guile IO library for GNU make (from: info make)
-## 
+##
 ## (define MKPORT #f)
-## 
+##
 ## (define (mkopen name mode)
 ## 	(set! MKPORT (open-file name mode))
 ## 	#f)
-## 
+##
 ## (define (mkwrite s)
 ## 	(display s MKPORT)
 ## 	(newline MKPORT)
 ## 	#f)
-## 
+##
 ## (define (mkclose)
 ## 	(close-port MKPORT)
 ## 	#f)
 ## #f
 ## endef
-## 
+##
 ## $(guile $(GUILEIO))
-## 
+##
 ## isguile :
 ## 	$(guile (mkopen "tmp.out" "w"))
 ## 	$(foreach X,$^,$(guile (mkwrite "$(X)")))
