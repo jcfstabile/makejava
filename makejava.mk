@@ -46,6 +46,8 @@ endif
 usage :
 	@echo -e For info type:
 	@echo -e "${inverse}" make describe "${reset}"
+	@echo -e To install makefile in current directory:
+	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk raw "${reset}"
 	@echo -e To install makefile in current directory and start to build java project:
 	@echo -e "${inverse}" make -f /path/to/makejava/makejava.mk configure "${reset}"
 
@@ -139,7 +141,7 @@ checkvars :
 	@echo -e "${redfg}ARG${reset}" $(ARG)
 
 ### genera un makefile configurado automaticamente
-configure : .makejava/lib/ .makejava/zip/
+raw : 
 ifneq (,$(wildcard ./makejava.mk))
 	@echo "Still on makejava directory. Nothing done."
 else
@@ -150,6 +152,9 @@ else
 	@printf "${graybg}makefile symlink created on $(shell pwd) ${reset}\n"
 	@printf "# use: make build ; make run ; make test\n"
 endif
+
+configure : raw .makejava/lib/ .makejava/zip/
+
 
 tips : tipsbanner imports creates
 
