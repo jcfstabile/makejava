@@ -104,7 +104,7 @@ rebuild : clean build
 run: build $(mainclass:=.class)
 ifneq ($(strip $(mainclass)),)
 	@echo -e "${greenfg}Running main method found:${reset}"
-	@java -cp $(classpath) $(mainfqn) $(ARG)
+	@java -cp $(classpath) $(mainfqn) $(ARG1) $(ARG2) $(ARG3) $(ARG4)
 else
 	@echo -e "${yellowfg}No main method found.${reset}"
 endif
